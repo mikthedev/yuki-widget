@@ -1,0 +1,20 @@
+{
+  "name": "waifu-widget",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "bundle": "node scripts/bundle-yuki.mjs",
+    "vercel-build": "node scripts/vercel-build.mjs",
+    "test:realtime": "node scripts/test-realtime.mjs",
+    "test:jwt": "node scripts/test-jwt.mjs",
+    "test:remote": "node scripts/test-remote-voice.mjs",
+    "test:greeting": "node scripts/test-greeting.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ws": "^8.18.0"
+  }
+}

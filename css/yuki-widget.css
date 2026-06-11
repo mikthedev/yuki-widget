@@ -1,0 +1,349 @@
+/* Yuki widget — compact corner companion, no panel background */
+
+.yuki-widget-host {
+  --yuki-h: clamp(108px, 17vh, 148px);
+  --accent: #6ee7ff;
+  --accent-2: #c084fc;
+  --ink: #1a2038;
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  left: auto;
+  top: auto;
+  z-index: 2147483646;
+  pointer-events: none;
+  font-family: "Outfit", "Segoe UI", system-ui, sans-serif;
+  touch-action: manipulation;
+}
+
+.yuki-widget-host.is-dragging {
+  transition: none;
+}
+
+.yuki-widget-host.is-dragging .yuki-char-wrap {
+  animation: none !important;
+  cursor: grabbing;
+}
+
+.yuki-widget-host * {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.yuki-widget-mount {
+  pointer-events: auto;
+  width: auto;
+}
+
+#yuki-widget {
+  pointer-events: auto;
+  width: auto;
+}
+
+.yuki-root.companion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+.yuki-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.yuki-toast {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  max-width: 168px;
+  padding: 7px 11px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.25;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  transform: translateY(4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  white-space: normal;
+}
+
+.yuki-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.yuki-toast.event-talk,
+.yuki-toast.event-info {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--ink);
+  border: 1px solid rgba(110, 231, 255, 0.35);
+}
+
+.yuki-toast.event-win {
+  background: #fff9e6;
+  color: #5c4200;
+  border: 1px solid rgba(252, 211, 77, 0.45);
+}
+
+.yuki-toast.event-big_win {
+  background: #ffe8f4;
+  color: #5a1030;
+  border: 1px solid rgba(255, 158, 205, 0.45);
+}
+
+.yuki-toast.event-lose {
+  background: #eef1ff;
+  color: #2a3050;
+  border: 1px solid rgba(200, 208, 240, 0.5);
+}
+
+.yuki-body {
+  display: flex;
+  justify-content: center;
+}
+
+.yuki-char-wrap {
+  position: relative;
+  height: var(--yuki-h);
+  width: auto;
+  animation: yukiFloaty 4.5s ease-in-out infinite;
+  transform-origin: 50% 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.yuki-char {
+  height: 100%;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.28));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.yuki-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 4%;
+  width: 110%;
+  height: 55%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  filter: blur(14px);
+  opacity: 0.28;
+  background: radial-gradient(circle, #6ee7ff 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes yukiFloaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.yuki-root[data-emotion="happy"] .yuki-glow {
+  background: radial-gradient(circle, #fcd34d 0%, transparent 70%);
+}
+
+.yuki-root[data-emotion="excited"] .yuki-glow {
+  background: radial-gradient(circle, #ff9ecd 0%, transparent 70%);
+  opacity: 0.38;
+}
+
+.yuki-root[data-emotion="sad"] .yuki-glow {
+  background: radial-gradient(circle, #8aa0ff 0%, transparent 70%);
+  opacity: 0.22;
+}
+
+.yuki-root[data-emotion="listening"] .yuki-glow {
+  background: radial-gradient(circle, #6ee7ff 0%, transparent 70%);
+  opacity: 0.45;
+}
+
+.yuki-root[data-emotion="thinking"] .yuki-glow {
+  background: radial-gradient(circle, #c084fc 0%, transparent 70%);
+}
+
+.yuki-root[data-emotion="excited"] .yuki-char-wrap {
+  animation: yukiBounceExcited 0.6s ease-in-out infinite;
+}
+
+@keyframes yukiBounceExcited {
+  35% { transform: translateY(-8px); }
+}
+
+.yuki-root.speaking .yuki-char {
+  animation: yukiTalkBob 0.28s ease-in-out infinite;
+}
+
+@keyframes yukiTalkBob {
+  50% { transform: translateY(-2px); }
+}
+
+.listen-ring {
+  --lvl: 0;
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  width: 68%;
+  aspect-ratio: 1;
+  transform: translateX(-50%) scale(calc(0.72 + var(--lvl) * 0.75));
+  border-radius: 50%;
+  border: 2px solid rgba(110, 231, 255, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.yuki-root.listening .listen-ring {
+  opacity: 1;
+}
+
+.yuki-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  position: relative;
+  z-index: 10;
+  touch-action: manipulation;
+}
+
+.yc-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.yc-btn:hover {
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+}
+
+.yc-btn:active {
+  transform: scale(0.9);
+}
+
+.yc-btn.talk.active {
+  background: linear-gradient(145deg, #ff7ab6, #ff4d6d);
+  color: #fff;
+  border-color: transparent;
+  box-shadow:
+    0 0 0 2px rgba(255, 122, 182, 0.35),
+    0 3px 14px rgba(255, 77, 109, 0.35);
+}
+
+.yc-btn.mute.is-muted {
+  background: rgba(255, 240, 243, 0.96);
+  color: #c9184a;
+}
+
+.yc-btn.screen {
+  display: none !important;
+}
+
+.yc-btn.screen.active {
+  background: linear-gradient(145deg, #6ee7ff, #38bdf8);
+  color: #042f3a;
+  box-shadow:
+    0 0 0 2px rgba(110, 231, 255, 0.4),
+    0 3px 14px rgba(56, 189, 248, 0.35);
+}
+
+body.yuki-screen-live .yuki-root[data-emotion="listening"] .yuki-glow,
+body.yuki-screen-live .yuki-root[data-emotion="idle"] .yuki-glow {
+  opacity: 0.42;
+}
+
+.confetti-layer {
+  position: absolute;
+  inset: -15% -30% 30% -30%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.confetti-layer i {
+  position: absolute;
+  top: 0;
+  width: 6px;
+  height: 9px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: yukiConfettiFall 1.6s ease-in forwards;
+}
+
+@keyframes yukiConfettiFall {
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(90px) rotate(540deg); }
+}
+
+.yuki-char-wrap.nudge {
+  animation: yukiNudgeHop 0.7s ease;
+}
+
+@keyframes yukiNudgeHop {
+  25% { transform: translateY(-8px); }
+}
+
+@media (max-width: 480px) {
+  .yuki-widget-host {
+    --yuki-h: clamp(96px, 15vh, 128px);
+  }
+
+  .yuki-controls {
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .yc-btn {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 20px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .yc-btn:active {
+    transform: scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yuki-char-wrap,
+  .yuki-root[data-emotion] .yuki-char-wrap,
+  .yuki-root.speaking .yuki-char {
+    animation: none !important;
+  }
+}
